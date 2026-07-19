@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Definitions_manga" targetNamespace="https://etzhayyim.com/bpmn/manga" exporter="hand-written" exporterVersion="1.0">
+
+  <bpmn:process id="manga_create_title" name="manga createTitle" isExecutable="true">
+    <bpmn:documentation>{ "nsid": "com.etzhayyim.apps.manga.createTitle", "version": 1, "resultTimeoutMs": 30000 }</bpmn:documentation>
+    <bpmn:startEvent id="Start_createTitle"><bpmn:outgoing>Flow_createTitle_1</bpmn:outgoing></bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_createTitle_1" sourceRef="Start_createTitle" targetRef="Task_createTitle"/>
+    <bpmn:serviceTask id="Task_createTitle" name="create title"><bpmn:extensionElements><zeebe:taskDefinition type="com.etzhayyim.apps.manga.createTitle"/></bpmn:extensionElements><bpmn:incoming>Flow_createTitle_1</bpmn:incoming><bpmn:outgoing>Flow_createTitle_2</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_createTitle_2" sourceRef="Task_createTitle" targetRef="End_createTitle"/>
+    <bpmn:endEvent id="End_createTitle"><bpmn:incoming>Flow_createTitle_2</bpmn:incoming></bpmn:endEvent>
+  </bpmn:process>
+
+  <bpmn:process id="manga_create_chapter" name="manga createChapter" isExecutable="true">
+    <bpmn:documentation>{ "nsid": "com.etzhayyim.apps.manga.createChapter", "version": 1, "resultTimeoutMs": 30000 }</bpmn:documentation>
+    <bpmn:startEvent id="Start_createChapter"><bpmn:outgoing>Flow_createChapter_1</bpmn:outgoing></bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_createChapter_1" sourceRef="Start_createChapter" targetRef="Task_createChapter"/>
+    <bpmn:serviceTask id="Task_createChapter" name="create chapter"><bpmn:extensionElements><zeebe:taskDefinition type="com.etzhayyim.apps.manga.createChapter"/></bpmn:extensionElements><bpmn:incoming>Flow_createChapter_1</bpmn:incoming><bpmn:outgoing>Flow_createChapter_2</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_createChapter_2" sourceRef="Task_createChapter" targetRef="End_createChapter"/>
+    <bpmn:endEvent id="End_createChapter"><bpmn:incoming>Flow_createChapter_2</bpmn:incoming></bpmn:endEvent>
+  </bpmn:process>
+
+  <bpmn:process id="manga_publish_chapter" name="manga publishChapter" isExecutable="true">
+    <bpmn:documentation>{ "nsid": "com.etzhayyim.apps.manga.publishChapter", "version": 1, "resultTimeoutMs": 30000 }</bpmn:documentation>
+    <bpmn:startEvent id="Start_publishChapter"><bpmn:outgoing>Flow_publishChapter_1</bpmn:outgoing></bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_publishChapter_1" sourceRef="Start_publishChapter" targetRef="Task_publishChapter"/>
+    <bpmn:serviceTask id="Task_publishChapter" name="publish chapter"><bpmn:extensionElements><zeebe:taskDefinition type="com.etzhayyim.apps.manga.publishChapter"/></bpmn:extensionElements><bpmn:incoming>Flow_publishChapter_1</bpmn:incoming><bpmn:outgoing>Flow_publishChapter_2</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_publishChapter_2" sourceRef="Task_publishChapter" targetRef="End_publishChapter"/>
+    <bpmn:endEvent id="End_publishChapter"><bpmn:incoming>Flow_publishChapter_2</bpmn:incoming></bpmn:endEvent>
+  </bpmn:process>
+
+  <bpmn:process id="manga_update_chapter_status" name="manga updateChapterStatus" isExecutable="true">
+    <bpmn:documentation>{ "nsid": "com.etzhayyim.apps.manga.updateChapterStatus", "version": 1, "resultTimeoutMs": 30000 }</bpmn:documentation>
+    <bpmn:startEvent id="Start_updateChapterStatus"><bpmn:outgoing>Flow_updateChapterStatus_1</bpmn:outgoing></bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_updateChapterStatus_1" sourceRef="Start_updateChapterStatus" targetRef="Task_updateChapterStatus"/>
+    <bpmn:serviceTask id="Task_updateChapterStatus" name="update chapter status"><bpmn:extensionElements><zeebe:taskDefinition type="com.etzhayyim.apps.manga.updateChapterStatus"/></bpmn:extensionElements><bpmn:incoming>Flow_updateChapterStatus_1</bpmn:incoming><bpmn:outgoing>Flow_updateChapterStatus_2</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_updateChapterStatus_2" sourceRef="Task_updateChapterStatus" targetRef="End_updateChapterStatus"/>
+    <bpmn:endEvent id="End_updateChapterStatus"><bpmn:incoming>Flow_updateChapterStatus_2</bpmn:incoming></bpmn:endEvent>
+  </bpmn:process>
+
+  <bpmn:process id="manga_record_reading_progress" name="manga recordReadingProgress" isExecutable="true">
+    <bpmn:documentation>{ "nsid": "com.etzhayyim.apps.manga.recordReadingProgress", "version": 1, "resultTimeoutMs": 30000 }</bpmn:documentation>
+    <bpmn:startEvent id="Start_recordReadingProgress"><bpmn:outgoing>Flow_recordReadingProgress_1</bpmn:outgoing></bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_recordReadingProgress_1" sourceRef="Start_recordReadingProgress" targetRef="Task_recordReadingProgress"/>
+    <bpmn:serviceTask id="Task_recordReadingProgress" name="record reading progress"><bpmn:extensionElements><zeebe:taskDefinition type="com.etzhayyim.apps.manga.recordReadingProgress"/></bpmn:extensionElements><bpmn:incoming>Flow_recordReadingProgress_1</bpmn:incoming><bpmn:outgoing>Flow_recordReadingProgress_2</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_recordReadingProgress_2" sourceRef="Task_recordReadingProgress" targetRef="End_recordReadingProgress"/>
+    <bpmn:endEvent id="End_recordReadingProgress"><bpmn:incoming>Flow_recordReadingProgress_2</bpmn:incoming></bpmn:endEvent>
+  </bpmn:process>
+
+  <bpmn:process id="manga_submit_from_narou" name="manga submitFromNarou" isExecutable="true">
+    <bpmn:documentation>{ "nsid": "com.etzhayyim.apps.manga.submitFromNarou", "version": 1, "resultTimeoutMs": 30000 }</bpmn:documentation>
+    <bpmn:startEvent id="Start_submitFromNarou"><bpmn:outgoing>Flow_submitFromNarou_1</bpmn:outgoing></bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_submitFromNarou_1" sourceRef="Start_submitFromNarou" targetRef="Task_submitFromNarou"/>
+    <bpmn:serviceTask id="Task_submitFromNarou" name="submit from narou"><bpmn:extensionElements><zeebe:taskDefinition type="com.etzhayyim.apps.manga.submitFromNarou"/></bpmn:extensionElements><bpmn:incoming>Flow_submitFromNarou_1</bpmn:incoming><bpmn:outgoing>Flow_submitFromNarou_2</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_submitFromNarou_2" sourceRef="Task_submitFromNarou" targetRef="End_submitFromNarou"/>
+    <bpmn:endEvent id="End_submitFromNarou"><bpmn:incoming>Flow_submitFromNarou_2</bpmn:incoming></bpmn:endEvent>
+  </bpmn:process>
+
+  <bpmn:process id="manga_add_tag" name="manga addTag" isExecutable="true">
+    <bpmn:documentation>{ "nsid": "com.etzhayyim.apps.manga.addTag", "version": 1, "resultTimeoutMs": 30000 }</bpmn:documentation>
+    <bpmn:startEvent id="Start_addTag"><bpmn:outgoing>Flow_addTag_1</bpmn:outgoing></bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_addTag_1" sourceRef="Start_addTag" targetRef="Task_addTag"/>
+    <bpmn:serviceTask id="Task_addTag" name="add tag"><bpmn:extensionElements><zeebe:taskDefinition type="com.etzhayyim.apps.manga.addTag"/></bpmn:extensionElements><bpmn:incoming>Flow_addTag_1</bpmn:incoming><bpmn:outgoing>Flow_addTag_2</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_addTag_2" sourceRef="Task_addTag" targetRef="End_addTag"/>
+    <bpmn:endEvent id="End_addTag"><bpmn:incoming>Flow_addTag_2</bpmn:incoming></bpmn:endEvent>
+  </bpmn:process>
+
+  <bpmn:process id="manga_get_title" name="manga getTitle" isExecutable="true">
+    <bpmn:documentation>{ "nsid": "com.etzhayyim.apps.manga.getTitle", "version": 1, "resultTimeoutMs": 30000 }</bpmn:documentation>
+    <bpmn:startEvent id="Start_getTitle"><bpmn:outgoing>Flow_getTitle_1</bpmn:outgoing></bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_getTitle_1" sourceRef="Start_getTitle" targetRef="Task_getTitle"/>
+    <bpmn:serviceTask id="Task_getTitle" name="get title"><bpmn:extensionElements><zeebe:taskDefinition type="com.etzhayyim.apps.manga.getTitle"/></bpmn:extensionElements><bpmn:incoming>Flow_getTitle_1</bpmn:incoming><bpmn:outgoing>Flow_getTitle_2</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_getTitle_2" sourceRef="Task_getTitle" targetRef="End_getTitle"/>
+    <bpmn:endEvent id="End_getTitle"><bpmn:incoming>Flow_getTitle_2</bpmn:incoming></bpmn:endEvent>
+  </bpmn:process>
+
+  <bpmn:process id="manga_list_titles" name="manga listTitles" isExecutable="true">
+    <bpmn:documentation>{ "nsid": "com.etzhayyim.apps.manga.listTitles", "version": 1, "resultTimeoutMs": 30000 }</bpmn:documentation>
+    <bpmn:startEvent id="Start_listTitles"><bpmn:outgoing>Flow_listTitles_1</bpmn:outgoing></bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_listTitles_1" sourceRef="Start_listTitles" targetRef="Task_listTitles"/>
+    <bpmn:serviceTask id="Task_listTitles" name="list titles"><bpmn:extensionElements><zeebe:taskDefinition type="com.etzhayyim.apps.manga.listTitles"/></bpmn:extensionElements><bpmn:incoming>Flow_listTitles_1</bpmn:incoming><bpmn:outgoing>Flow_listTitles_2</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_listTitles_2" sourceRef="Task_listTitles" targetRef="End_listTitles"/>
+    <bpmn:endEvent id="End_listTitles"><bpmn:incoming>Flow_listTitles_2</bpmn:incoming></bpmn:endEvent>
+  </bpmn:process>
+
+  <bpmn:process id="manga_get_chapter" name="manga getChapter" isExecutable="true">
+    <bpmn:documentation>{ "nsid": "com.etzhayyim.apps.manga.getChapter", "version": 1, "resultTimeoutMs": 30000 }</bpmn:documentation>
+    <bpmn:startEvent id="Start_getChapter"><bpmn:outgoing>Flow_getChapter_1</bpmn:outgoing></bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_getChapter_1" sourceRef="Start_getChapter" targetRef="Task_getChapter"/>
+    <bpmn:serviceTask id="Task_getChapter" name="get chapter"><bpmn:extensionElements><zeebe:taskDefinition type="com.etzhayyim.apps.manga.getChapter"/></bpmn:extensionElements><bpmn:incoming>Flow_getChapter_1</bpmn:incoming><bpmn:outgoing>Flow_getChapter_2</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_getChapter_2" sourceRef="Task_getChapter" targetRef="End_getChapter"/>
+    <bpmn:endEvent id="End_getChapter"><bpmn:incoming>Flow_getChapter_2</bpmn:incoming></bpmn:endEvent>
+  </bpmn:process>
+
+  <bpmn:process id="manga_list_chapters" name="manga listChapters" isExecutable="true">
+    <bpmn:documentation>{ "nsid": "com.etzhayyim.apps.manga.listChapters", "version": 1, "resultTimeoutMs": 30000 }</bpmn:documentation>
+    <bpmn:startEvent id="Start_listChapters"><bpmn:outgoing>Flow_listChapters_1</bpmn:outgoing></bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_listChapters_1" sourceRef="Start_listChapters" targetRef="Task_listChapters"/>
+    <bpmn:serviceTask id="Task_listChapters" name="list chapters"><bpmn:extensionElements><zeebe:taskDefinition type="com.etzhayyim.apps.manga.listChapters"/></bpmn:extensionElements><bpmn:incoming>Flow_listChapters_1</bpmn:incoming><bpmn:outgoing>Flow_listChapters_2</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_listChapters_2" sourceRef="Task_listChapters" targetRef="End_listChapters"/>
+    <bpmn:endEvent id="End_listChapters"><bpmn:incoming>Flow_listChapters_2</bpmn:incoming></bpmn:endEvent>
+  </bpmn:process>
+
+  <bpmn:process id="manga_search_titles" name="manga searchTitles" isExecutable="true">
+    <bpmn:documentation>{ "nsid": "com.etzhayyim.apps.manga.searchTitles", "version": 1, "resultTimeoutMs": 30000 }</bpmn:documentation>
+    <bpmn:startEvent id="Start_searchTitles"><bpmn:outgoing>Flow_searchTitles_1</bpmn:outgoing></bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_searchTitles_1" sourceRef="Start_searchTitles" targetRef="Task_searchTitles"/>
+    <bpmn:serviceTask id="Task_searchTitles" name="search titles"><bpmn:extensionElements><zeebe:taskDefinition type="com.etzhayyim.apps.manga.searchTitles"/></bpmn:extensionElements><bpmn:incoming>Flow_searchTitles_1</bpmn:incoming><bpmn:outgoing>Flow_searchTitles_2</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_searchTitles_2" sourceRef="Task_searchTitles" targetRef="End_searchTitles"/>
+    <bpmn:endEvent id="End_searchTitles"><bpmn:incoming>Flow_searchTitles_2</bpmn:incoming></bpmn:endEvent>
+  </bpmn:process>
+
+</bpmn:definitions>
