@@ -1,4 +1,7 @@
 {:schema "etzhayyim.repository/v1"
- :name "com-etzhayyim-app-manga"
+ :name "app-manga"
  :kind :app
- :canonical-metadata :edn}
+ :canonical-metadata :edn
+ :boundary {:role :manga-publishing-application
+            :creation-business "cloud-itonami/mangaka"
+            :viewer-library "kotoba-lang/manga-viewer"}}

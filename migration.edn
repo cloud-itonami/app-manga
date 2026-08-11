@@ -1,4 +1,4 @@
 {:schema "etzhayyim.migration/v1"
  :source {:repository "etzhayyim/root" :revision "57d57fc47f4b2544f2f71e8905c279f5cdf090f4" :path "60-apps/etzhayyim-project-manga" :tree "eeba3e7c966a9642c91c4cad0d149ca24aa9fdc0" :tracked-files 15 :bytes 53273}
- :destination {:repository "etzhayyim/com-etzhayyim-app-manga"}
+ :destination {:repository "cloud-itonami/app-manga"}
  :identity {:allowed-additions ["README.edn" "migration.edn"]}}
