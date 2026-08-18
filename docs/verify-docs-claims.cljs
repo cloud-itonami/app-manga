@@ -1,0 +1,141 @@
+#!/usr/bin/env nbb
+;; verify-docs-claims.cljs — README.md / docs/operator-quickstart.md が
+;; 数えられると言っている数を、実際に数えて突き合わせる。
+;;
+;;   nbb docs/verify-docs-claims.cljs
+;;
+;; exit 0 = PASS / 1 = FAIL / 3 = 判定できなかった（0 でも 1 でもない）
+;;
+;; ⚠ **DNS はここで検査しない。** manga.etzhayyim.com が NXDOMAIN であることは
+;;   この repo の中心的な事実だが、ネットワークの事実をオフラインで測ると
+;;   「引けなかった」が「無い」と同じ値になる（＝圏外が合格に化ける）。
+;;   その 1 件だけは quickstart に置いて人間に引かせる。app-hakken 版と同じ判断。
+;;
+;; ⚠ 「測れなかった」を「問題なし」と同じ値で返さないこと。3 はそのための値。
+;;   git が無い・repo でない・対象が 0 件、はすべて 3 で終わる。
+
+(require '["node:child_process" :as cp]
+         '["node:fs" :as fs]
+         '[clojure.string :as str])
+
+(defn- die! [code & msg]
+  (binding [*print-fn* *print-err-fn*] (apply println msg))
+  (js/process.exit code))
+
+(defn- git [& args]
+  (try
+    (str/trim (str (cp/execFileSync "git" (clj->js (vec args)) #js {:encoding "utf8"})))
+    (catch :default e
+      (die! 3 "UNDETERMINED: git" (str/join " " args) "が失敗した —"
+            (or (some-> e .-message) "(理由不明)")))))
+
+(defn- slurp* [p]
+  (when-not (fs/existsSync p)
+    (die! 3 "UNDETERMINED:" p "が無い。この repo のルートで実行すること"))
+  (fs/readFileSync p "utf8"))
+
+(def ^:private tracked
+  (let [ls (remove str/blank? (str/split-lines (git "ls-files")))]
+    (when (zero? (count ls))
+      (die! 3 "UNDETERMINED: git ls-files が空。commit の無い repo か"))
+    ls))
+
+(defn- bytes-of [paths]
+  (reduce + 0 (map (fn [p]
+                     (if (fs/existsSync p)
+                       (.-size (fs/statSync p))
+                       (die! 3 "UNDETERMINED: tracked なのに実体が無い:" p)))
+                   paths)))
+
+(defn- under [prefix] (filter #(str/starts-with? % prefix) tracked))
+
+(defn- count-matches [s re] (count (re-seq re s)))
+
+;; ── 対象 ──────────────────────────────────────────────────────────────────
+
+(def ^:private kotoba-src  (under "kotoba/src/"))
+(def ^:private kotoba-test (under "kotoba/test/"))
+(def ^:private adapter-src (slurp* "xrpc-adapter/src/index.ts"))
+(def ^:private bpmn        (slurp* "bpmn/manga.bpmn"))
+(def ^:private test-src    (slurp* "kotoba/test/manga.test.ts"))
+(def ^:private index-src   (slurp* "kotoba/src/index.ts"))
+
+(doseq [[what coll] {"kotoba/src" kotoba-src "kotoba/test" kotoba-test}]
+  (when (zero? (count coll))
+    (die! 3 "UNDETERMINED:" what "に tracked file が 1 件も無い")))
+
+;; ── 数える ────────────────────────────────────────────────────────────────
+
+;; index.ts が再輸出しているコマンド名（`export * from "./types.js"` は型なので数えない）
+(def ^:private exported-commands
+  (->> (re-seq #"(?s)export\s*\{([^}]*)\}\s*from\s*\"\./(?:titles|chapters|ingest)\.js\"" index-src)
+       (mapcat (fn [[_ body]] (str/split body #",")))
+       (map str/trim)
+       (remove str/blank?)
+       distinct))
+
+(def ^:private adapter-routes (count-matches adapter-src #"\[`\$\{NSID_BASE\}\.[a-zA-Z]+`\]"))
+(def ^:private bpmn-tasks     (count-matches bpmn #"<bpmn:serviceTask "))
+(def ^:private bpmn-apps-nsid (count (distinct (re-seq #"com\.etzhayyim\.apps\.manga\.[a-zA-Z]+" bpmn))))
+(def ^:private code-apps-nsid (+ (count-matches adapter-src #"etzhayyim\.apps")
+                                 (reduce + 0 (map #(count-matches (slurp* %) #"etzhayyim\.apps") kotoba-src))))
+(def ^:private tests-declared (count-matches test-src #"(?m)^\s+it\("))
+
+;; @etzhayyim/sdk を **値として** import している kotoba/src のファイル。
+;; 0 であることが「sdk 抜きでテストが通る」の理由なので、そこを検査する。
+(def ^:private sdk-value-imports
+  (->> kotoba-src
+       (filter (fn [p]
+                 (let [s (slurp* p)]
+                   (and (str/includes? s "@etzhayyim/sdk")
+                        (not (re-find #"import\s+type\s*\{[^}]*\}\s*from\s*\"@etzhayyim/sdk\"" s))))))
+       vec))
+
+(def ^:private sdk-type-imports
+  (count (filter #(re-find #"import\s+type\s*\{[^}]*\}\s*from\s*\"@etzhayyim/sdk\"" (slurp* %)) kotoba-src)))
+
+;; workspace:* を宣言しているのに workspace root がこの repo に無いこと
+(def ^:private adapter-pkg (slurp* "xrpc-adapter/package.json"))
+(def ^:private declares-workspace? (str/includes? adapter-pkg "workspace:*"))
+(def ^:private workspace-roots
+  (filter (fn [p] (and (str/ends-with? p "package.json")
+                       (let [s (slurp* p)]
+                         (or (str/includes? s "\"workspaces\"")
+                             (str/includes? s "pnpm-workspace")))))
+          tracked))
+
+;; ── 判定 ──────────────────────────────────────────────────────────────────
+
+(def ^:private checks
+  [{:what "tracked ファイル数"            :got (count tracked)          :want 22}
+   {:what "kotoba/src のファイル数"        :got (count kotoba-src)       :want 5}
+   {:what "kotoba/src のバイト数"          :got (bytes-of kotoba-src)    :want 21166}
+   {:what "kotoba/test のバイト数"         :got (bytes-of kotoba-test)   :want 6555}
+   {:what "test の it( 件数"               :got tests-declared           :want 16}
+   {:what "index.ts が再輸出するコマンド数" :got (count exported-commands) :want 12}
+   {:what "xrpc-adapter の route 数"       :got adapter-routes           :want 12}
+   {:what "BPMN の serviceTask 数"         :got bpmn-tasks               :want 12}
+   {:what "BPMN の apps. 付き NSID 数"     :got bpmn-apps-nsid           :want 12}
+   {:what "コード側の apps. 付き NSID 数（食い違いの証拠。0 が現状）"
+    :got code-apps-nsid :want 0}
+   {:what "kotoba/src の sdk 型 import 数"  :got sdk-type-imports         :want 4}
+   {:what "kotoba/src の sdk **値** import 数（0 だから sdk 無しで走る）"
+    :got (count sdk-value-imports) :want 0}
+   {:what "xrpc-adapter が workspace:* を宣言している" :got declares-workspace? :want true}
+   {:what "この repo の workspace root の数（宣言先が無いことの証拠）"
+    :got (count workspace-roots) :want 0}])
+
+(println (str "SCANNED\t" (count tracked) " tracked / " (count kotoba-src) " src / "
+              (count kotoba-test) " test / " (count checks) " 検査"))
+
+(doseq [{:keys [what got want]} checks]
+  (let [ok (= got want)]
+    (println (str (if ok "  ok   " "  FAIL ") what))
+    (println (str "         got  " (pr-str got)))
+    (when-not ok (println (str "         want " (pr-str want))))))
+
+(if (every? #(= (:got %) (:want %)) checks)
+  (do (println (str "PASS — README.md の数値 " (count checks) " 件は実測と一致"))
+      (js/process.exit 0))
+  (do (println "FAIL — README.md の数値が実測と食い違う")
+      (js/process.exit 1)))
