@@ -7,11 +7,11 @@ BPMN プロセス定義（`bpmn/`）—— に同じ形で並んでいる。
 
 この repo は **`etzhayyim/root` の `60-apps/etzhayyim-project-manga` から
 抽出したもの**で、抽出時の 15 ファイルはバイト単位で保管されている
-（`migration.edn` が出所を pin し、`docs/verify-custody.cljs` が検査する）。
+（`migration.edn` が出所を pin し、`docs/verify-custody.cljk` が検査する）。
 
 **動かす手順は [`docs/operator-quickstart.md`](docs/operator-quickstart.md)。
 そこに書いてあるのは実際に踏んだ手順だけで、踏めなかったものは踏めないと
-書いてある。** この README の数値は `nbb docs/verify-docs-claims.cljs` が
+書いてある。** この README の数値は `nbb docs/verify-docs-claims.cljk` が
 毎回数え直す（14 件）。
 
 ## 今日ここに在るもの（実測）
@@ -73,7 +73,7 @@ Chapter 5（create / get / list / publish / updateStatus）・Ingest 1
    唯一の route（`manga.etzhayyim.com/xrpc/*`）であり、`ACTOR_DID`
    `did:web:manga.etzhayyim.com` の基でもある。`etzhayyim.com` /
    `pds.etzhayyim.com` / `kotoba.etzhayyim.com` は引ける。
-   （DNS は verifier では見ない。理由は `docs/verify-docs-claims.cljs`
+   （DNS は verifier では見ない。理由は `docs/verify-docs-claims.cljk`
    の冒頭に書いた。quickstart §6 に人間が引く手順を置いた。）
 3. **`kotoba/README.md` の相対リンク 4 本が全部切れている。** 抽出前の
    モノレポの位置を指している。うち ADR へのリンクは **2 重に外れて**
@@ -95,8 +95,8 @@ implicit-any は独立した欠陥ではない —— 手順は quickstart §5�
 ## 検査
 
 ```bash
-nbb docs/verify-custody.cljs             # 抽出物が出所とバイト一致か（--origin で GitHub とも）
-nbb docs/verify-docs-claims.cljs         # この README の数値 14 件を数え直す
+nbb docs/verify-custody.cljk             # 抽出物が出所とバイト一致か（--origin で GitHub とも）
+nbb docs/verify-docs-claims.cljk         # この README の数値 14 件を数え直す
 ```
 
 どちらも exit 0=PASS / 1=FAIL / **3=判定できなかった**。3 を 0 と混ぜないのは、
