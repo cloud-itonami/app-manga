@@ -6,5 +6,5 @@
                                 ".gitignore"
                                 "README.md"
                                 "docs/operator-quickstart.md"
-                                "docs/verify-custody.cljs"
-                                "docs/verify-docs-claims.cljs"]}}
+                                "docs/verify-custody.cljk"
+                                "docs/verify-docs-claims.cljk"]}}

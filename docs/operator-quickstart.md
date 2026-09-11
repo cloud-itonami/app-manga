@@ -22,7 +22,7 @@ git ls-files | wc -l          # → 22
 この repo は `etzhayyim/root` からの抽出物なので、**最初に custody を見る。**
 
 ```bash
-nbb docs/verify-custody.cljs
+nbb docs/verify-custody.cljk
 ```
 
 ```
@@ -112,7 +112,7 @@ node -e "const p=require('./node_modules/@etzhayyim/sdk-mock/package.json'); \
 ## 4. README の数値を数え直す（ネットワーク不要）
 
 ```bash
-nbb docs/verify-docs-claims.cljs
+nbb docs/verify-docs-claims.cljk
 ```
 
 ```
@@ -123,7 +123,7 @@ PASS — README.md の数値 14 件は実測と一致
 
 数値を書き換えたら必ずこれを走らせること。**この検査は壊れることを確認して
 から landed にしてある** —— 何をどう壊すと何が赤くなるかは
-`docs/verify-docs-claims.cljs` を直接読むより、実際に 1 バイト足して走らせる
+`docs/verify-docs-claims.cljk` を直接読むより、実際に 1 バイト足して走らせる
 方が早い（例: `kotoba/src/types.ts` に 1 バイト追記 → src バイト数だけ FAIL）。
 
 ## 5. 型検査 —— この repo のコードは 0 件、10 件は全部 sdk 由来

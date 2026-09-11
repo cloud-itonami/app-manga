@@ -1,6 +1,6 @@
 # 足場は tracked にしない。docs/operator-quickstart.md §3 は node_modules/ を
 # kotoba/ に **コピーして持ち込む** 手順なので、これが無いと `git add -A` が
-# 45 パッケージを commit し、custody 検査（docs/verify-custody.cljs）が
+# 45 パッケージを commit し、custody 検査（docs/verify-custody.cljk）が
 # 保管対象の数で FAIL する。
 node_modules/
 .vite/
