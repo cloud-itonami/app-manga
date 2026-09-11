@@ -11,7 +11,7 @@ BPMN プロセス定義（`bpmn/`）—— に同じ形で並んでいる。
 
 **動かす手順は [`docs/operator-quickstart.md`](docs/operator-quickstart.md)。
 そこに書いてあるのは実際に踏んだ手順だけで、踏めなかったものは踏めないと
-書いてある。** この README の数値は `nbb docs/verify-docs-claims.cljk` が
+書いてある。** この README の数値は `kbb --backend sci docs/verify-docs-claims.cljk` が
 毎回数え直す（14 件）。
 
 ## 今日ここに在るもの（実測）
@@ -95,8 +95,8 @@ implicit-any は独立した欠陥ではない —— 手順は quickstart §5�
 ## 検査
 
 ```bash
-nbb docs/verify-custody.cljk             # 抽出物が出所とバイト一致か（--origin で GitHub とも）
-nbb docs/verify-docs-claims.cljk         # この README の数値 14 件を数え直す
+kbb --backend sci docs/verify-custody.cljk             # 抽出物が出所とバイト一致か（--origin で GitHub とも）
+kbb --backend sci docs/verify-docs-claims.cljk         # この README の数値 14 件を数え直す
 ```
 
 どちらも exit 0=PASS / 1=FAIL / **3=判定できなかった**。3 を 0 と混ぜないのは、

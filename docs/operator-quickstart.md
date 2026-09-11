@@ -22,7 +22,7 @@ git ls-files | wc -l          # → 22
 この repo は `etzhayyim/root` からの抽出物なので、**最初に custody を見る。**
 
 ```bash
-nbb docs/verify-custody.cljk
+kbb --backend sci docs/verify-custody.cljk
 ```
 
 ```
@@ -112,7 +112,7 @@ node -e "const p=require('./node_modules/@etzhayyim/sdk-mock/package.json'); \
 ## 4. README の数値を数え直す（ネットワーク不要）
 
 ```bash
-nbb docs/verify-docs-claims.cljk
+kbb --backend sci docs/verify-docs-claims.cljk
 ```
 
 ```
