@@ -17,7 +17,7 @@ All 12 canonical manga lexicons now have kotoba reference impl. Wire-up
 to a Worker / LangServer pod XRPC handler is the next operator task per
 ADR-2605203000.
 
-## Authority-chain DIDs (per manga CLAUDE.md)
+## Authority-chain DIDs (per manga AGENTS.md)
 
 ```
 did:web:manga.etzhayyim.com                    — controller
